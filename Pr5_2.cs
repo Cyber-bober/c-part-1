@@ -17,41 +17,53 @@ class Program
     {
         // Ввод натурального числа N
         Console.Write("Введите натуральное число N: ");
-        int N = int.Parse(Console.ReadLine());
+        if (!int.TryParse(Console.ReadLine(), out int N) || N <= 0)
+        {
+            Console.WriteLine("Error");
+            return;
+        }
+     
         Console.WriteLine($"Сумма цифр числа {N} = {SumDigits(N)}\n");
 
         // Примерные значения для отрезка и параметров (можно заменить на ввод)
-        int a = 10, b = 30, C = 5, A = 23;
+        Console.Write("Enter a ");
+        int a = int.Parse(Console.ReadLine());
+        Console.Write("Enter b ");
+        int b = int.Parse(Console.ReadLine());
+        Console.Write("Enter C ");
+        int C = int.Parse(Console.ReadLine());
+        Console.Write("Enter A ");
+        int A = int.Parse(Console.ReadLine());
+        string s = "";
+        string e = "";
+        string o = "";
+
 
         // a) Сумма цифр для каждого числа на отрезке [a, b]
         Console.WriteLine("a) Суммы цифр на отрезке [a, b]:");
+       
         for (int i = a; i <= b; i++)
-            Console.WriteLine($"{i} -> {SumDigits(i)}");
-
-        // b) Числа с суммой цифр, равной C
-        Console.WriteLine($"\nb) Числа с суммой цифр = {C}:");
-        for (int i = a; i <= b; i++)
-            if (SumDigits(i) == C)
-                Console.Write($"{i} ");
-        Console.WriteLine();
-
-        // c) Числа с нечётной суммой цифр
-        Console.WriteLine("\nc) Числа с нечётной суммой цифр:");
-        for (int i = a; i <= b; i++)
-            if (SumDigits(i) % 2 == 1)
-                Console.Write($"{i} ");
-        Console.WriteLine();
-
-        // d) Ближайшее предшествующее число с такой же суммой цифр, как у A
-        Console.WriteLine($"\nd) Ближайшее число перед {A} с суммой цифр {SumDigits(A)}:");
-        int targetSum = SumDigits(A);
-        for (int i = A - 1; i >= 1; i--)
         {
-            if (SumDigits(i) == targetSum)
+            int sum = SumDigits(i);
+            s += $"{i} -> {sum}\n";
+            if (sum == C)
+                e += $"{i} ";
+            if (sum % 2 == 1)
+                o += $"{i} ";
+
+        }
+        Console.WriteLine(s);
+        Console.WriteLine($"\nb) Числа с суммой цифр = {C}: {e}");
+        Console.WriteLine($"\nc) Числа с нечётной суммой цифр = {o}");
+        int t = SumDigits(A);
+        Console.WriteLine($"\nd) Ближайшее чисело перед {A} с суммой цифр {t}:");
+        for (int i = A -1; i >= 1; i--)
+        {
+            if (SumDigits(i) == t)
             {
                 Console.WriteLine(i);
                 break;
             }
         }
+        Console.ReadLine();
     }
-}
