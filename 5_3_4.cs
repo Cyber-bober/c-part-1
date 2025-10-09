@@ -15,33 +15,56 @@ using System;
 
 class Program
 {
-
+    static string Lunat1(int n)
+    {
+        if (n > 4 || n == 0)
+            return "лунатиков";
+        else if (n == 1)
+            return "лунатик";
+        else
+            return "лунатика";
+    }
+    static string Lunat2(int n)
+    {
+        return (n == 1) ? "жил" : "жили";
+    }
+    static string Lunat3(int n)
+        {
+            return (n == 1) ? "ворочался" : "ворочалось";
+        }
+    static string Lunat4(int n)
+    {
+        return (n == 1) ? "остался" : "осталось";
+    }
     static void PrintLunaticsPoem(int count)
     {
 
-        if (count == 0)
-        {
-            Console.WriteLine("И больше лунатиков не стало на луне");
-            return; 
-        }
+    if (count == 0)
+    {
+        Console.WriteLine("И больше лунатиков не стало на луне");
+        return;
+    }
+    string word1 = Lunat1(count);
+    string word2 = Lunat2(count);
+    string word3 = Lunat3(count);
+    string word4 = Lunat1(count - 1);
+    string word5 = Lunat4(count - 1);
+    Console.WriteLine($"{count} {word1} {word2} на луне");
+    Console.WriteLine($"{count} {word1} {word3} во сне");
+    Console.WriteLine("Один из лунатиков упал с луны во сне");
+    Console.WriteLine($"{count - 1} {word4} {word5} на луне");
 
-        Console.WriteLine($"{count} лунатиков жили на луне");
-        Console.WriteLine($"{count} лунатиков ворочались во сне");
-        Console.WriteLine("Один из лунатиков упал с луны во сне");
-        Console.WriteLine($"{count - 1} лунатиков осталось на луне");
+    Console.WriteLine();
 
-        Console.WriteLine();
-
-        PrintLunaticsPoem(count - 1);
+    PrintLunaticsPoem(count - 1);
     }
 
     static void Main()
     {
-        int startCount = 10;
-
-        PrintLunaticsPoem(startCount);
+        PrintLunaticsPoem(10);
 
         Console.WriteLine("Нажмите любую клавишу для выхода...");
         Console.ReadKey();
     }
+    
 }
