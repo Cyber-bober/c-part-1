@@ -35,7 +35,7 @@ class Program
         PrintLunaticsPoem(count - 1);
     }
 
-    static void Main(string[] args)
+    static void Main()
     {
         int startCount = 10;
 
