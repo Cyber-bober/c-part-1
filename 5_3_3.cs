@@ -11,7 +11,7 @@ class Program
             return 1;
         return 1 + Count(num / 10);
     }
-    static void Main(string[] args)
+    static void Main()
     {
         Console.Write("Enter Natural num: ");
         if (int.TryParse(Console.ReadLine(), out int num) && num > 0)
