@@ -2,50 +2,85 @@
 Замечание. Для хранения массив n×n использовать двумерный или ступенчатый массив. Свой выбор 
 обосновать. Четные столбцы таблицы заменить на вектор Х. */
 
+using System;
+
 class Program
 {
-    static void Main()
+    // Вывод матрицы
+    static void Print(int[,] a)
     {
-
-        Console.Write("Введите n: ");
-        int n = int.Parse(Console.ReadLine());
-
-        int[,] matrix = new int[n, n];
-
-        // Ввод элементов матрицы
-        Console.WriteLine("Введите элементы матрицы построчно:");
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < a.GetLength(0); i++)
         {
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < a.GetLength(1); j++)
             {
-                matrix[i, j] = int.Parse(Console.ReadLine());
-            }
-        }
-
-        int[] X = new int[n];
-        Console.WriteLine("Введите элементы вектора X:");
-        for (int i = 0; i < n; i++)
-        {
-            X[i] = int.Parse(Console.ReadLine());
-        }
-
-        // Заменяем чётные столбцы (нумерация с 1, индексы 1, 3, 5...)
-        for (int j = 1; j < n; j += 2) 
-        {
-            for (int i = 0; i < n; i++)
-            {
-                matrix[i, j] = X[i];
-            }
-        }
-
-        Console.WriteLine("Результат:");
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                Console.Write(matrix[i, j] + "\t");
+                Console.Write("{0,3} ", a[i, j]);
             }
             Console.WriteLine();
         }
+    }
+
+    // Ввод квадратной матрицы n×n
+    static void Input(out int[,] a)
+    {
+        Console.Write("n= ");
+        int n = int.Parse(Console.ReadLine());
+        a = new int[n, n];
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                Console.Write("a[{0},{1}]= ", i, j);
+                a[i, j] = int.Parse(Console.ReadLine());
+            }
+        }
+    }
+
+    // Ввод вектора X длиной n
+    static void InputVector(int n, out int[] x)
+    {
+        x = new int[n];
+        Console.WriteLine("Введите вектор X (длина {0}):", n);
+        for (int i = 0; i < n; i++)
+        {
+            Console.Write("x[{0}]= ", i);
+            x[i] = int.Parse(Console.ReadLine());
+        }
+    }
+
+    // Замена чётных столбцов (с индексами 0, 2, 4, ...) на вектор X
+    static void Change(int[,] a, int[] x)
+    {
+        int n = a.GetLength(0); // так как квадратная матрица
+
+        for (int j = 0; j < n; j++)
+        {
+            if (j % 2 == 0) 
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    a[i, j] = x[i];
+                }
+            }
+        }
+    }
+
+    static void Main()
+    {
+        int[,] a;
+        Input(out a);
+        int n = a.GetLength(0);
+
+        int[] x;
+        InputVector(n, out x);
+
+        Console.WriteLine("Исходный массив:");
+        Print(a);
+
+        Change(a, x);
+
+        Console.WriteLine("Изменённый массив:");
+        Print(a);
+        Console.ReadLine();
     }
 }
