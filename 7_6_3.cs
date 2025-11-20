@@ -1,13 +1,15 @@
 /*В массиве размером n×n, элементы которого – целые числа, произвести следующие 
 действия: Вставить новую строку после всех строк, в которых нет ни одного четного элемента.
 Замечание. Для хранения массив n×n использовать двумерный или ступенчатый массив. Свой выбор 
-обосновать. */
+обосновать.
+
+ДОБАВИТЬ: Сдвиг как в одномерном массиве и сделать разное количество элементов в строке */
 
 using System;
 
 class Program
 {
-    // Проверяет, есть ли хотя бы один чётный элемент в строке
+
     static bool HasEven(int[] row)
     {
         for (int j = 0; j < row.Length; j++)
@@ -18,7 +20,6 @@ class Program
         return false;
     }
 
-    // Вывод ступенчатого массива
     static void Print(int[][] matrix)
     {
         for (int i = 0; i < matrix.Length; i++)
@@ -35,8 +36,7 @@ class Program
     {
         Console.Write("n = ");
         int n = int.Parse(Console.ReadLine());
-
-        // Ввод исходной матрицы (ступенчатый массив)
+n)
         int[][] a = new int[n][];
         for (int i = 0; i < n; i++)
         {
@@ -48,7 +48,6 @@ class Program
             }
         }
 
-        // Подсчитать, сколько строк НЕ содержат чётных элементов
         int countNoEven = 0;
         for (int i = 0; i < n; i++)
         {
@@ -56,25 +55,22 @@ class Program
                 countNoEven++;
         }
 
-        // Итоговое количество строк
-        int newRows = n + countNoEven;
-
-        // Создать новую матрицу
-        int[][] result = new int[newRows][];
+        int[][] result = new int[n + countNoEven][];
 
         int resultIndex = 0;
         for (int i = 0; i < n; i++)
         {
-            // Копируем текущую строку
+
             result[resultIndex] = new int[n];
-            for (int j = 0; j < n; j++)
-                result[resultIndex][j] = a[i][j];
+            Array.Copy(a[i], result[resultIndex], n);
             resultIndex++;
 
-            // Если в строке нет чётных — вставляем строку из нулей
             if (!HasEven(a[i]))
             {
-                result[resultIndex] = new int[n]; // все элементы = 0
+                result[resultIndex] = new int[n + 1]; 
+                // Заполним нулями 
+                for (int k = 0; k < n + 1; k++)
+                    result[resultIndex][k] = 0;
                 resultIndex++;
             }
         }
@@ -83,8 +79,9 @@ class Program
         Console.WriteLine("\nИсходная матрица:");
         Print(a);
 
-        Console.WriteLine("\nМатрица после вставки:");
+        Console.WriteLine("\nМатрица после вставки (ступенчатая, с разной длиной строк):");
         Print(result);
+
         Console.ReadLine();
     }
 }
