@@ -11,87 +11,66 @@ class Program
 {
     static void Main()
     {
-    
         Console.Write("Введите количество строк: ");
         int n = int.Parse(Console.ReadLine());
 
-        // Создаём ступенчатый массив
-        int[][] matrix = new int[n][];
+        int maxRows = 2 * n;
+        int[][] matrix = new int[maxRows][];
 
-        // Шаг 2: Ввод строк разной длины
         for (int i = 0; i < n; i++)
         {
-            Console.Write($" {i + 1} ");
-            string[] input = Console.ReadLine().Split(' ');
-            matrix[i] = new int[input.Length];
-            for (int j = 0; j < input.Length; j++)
+            Console.Write($"Введите элементы {i + 1}-й строки через пробел: ");
+            string[] parts = Console.ReadLine().Split(' ');
+            matrix[i] = new int[parts.Length];
+            for (int j = 0; j < parts.Length; j++)
             {
-                matrix[i][j] = int.Parse(input[j]);
+                matrix[i][j] = int.Parse(parts[j]);
             }
         }
 
-        // Выводим исходную матрицу
         Console.WriteLine("\nИсходная матрица:");
-        PrintMatrix(matrix);
+        PrintMatrix(matrix, n);
 
-        // Шаг 3: Проходим по строкам и вставляем новые
-        int currentRowCount = matrix.Length;
-        for (int i = 0; i < currentRowCount; i++)
+        int currentRows = n;
+
+        for (int i = currentRows - 1; i >= 0; i--)
         {
-            // Проверяем, есть ли в строке хотя бы один чётный элемент
             bool hasEven = false;
-            foreach (int element in matrix[i])
+            for (int j = 0; j < matrix[i].Length; j++)
             {
-                if (element % 2 == 0)
+                if (matrix[i][j] % 2 == 0)
                 {
                     hasEven = true;
                     break;
                 }
             }
 
-            // Если в строке нет чётных элементов
             if (!hasEven)
             {
-                // Вставляем новую строку (например, длиной 3, заполненную нулями)
-                // Можно задать любую длину, например, длину предыдущей строки
-                int newRowLength = matrix[i].Length; // длина новой строки = длина текущей
-                InsertNewRow(matrix, i + 1, newRowLength);
-                i++; // пропускаем новую строку, чтобы не проверять её снова
-                currentRowCount++; // увеличиваем общее количество строк
+                for (int k = currentRows; k > i + 1; k--)
+                {
+                    matrix[k] = matrix[k - 1];
+                }
+
+                matrix[i + 1] = new int[matrix[i].Length];
+                currentRows++;
             }
         }
 
-        // Выводим результат
         Console.WriteLine("\nМатрица после вставки строк:");
-        PrintMatrix(matrix);
+        PrintMatrix(matrix, currentRows);
     }
 
-    // Метод для вставки новой строки в ступенчатый массив
-    static void InsertNewRow(int[][] matrix, int insertIndex, int newRowLength)
+    static void PrintMatrix(int[][] matrix, int rows)
     {
-        // Создаём новую строку (например, заполненную нулями)
-        int[] newRow = new int[newRowLength];
-
-        // Сдвигаем все строки с индекса insertIndex и ниже вниз на одну строку
-        for (int i = matrix.Length - 1; i >= insertIndex; i--)
+        for (int i = 0; i < rows; i++)
         {
-            matrix[i + 1] = matrix[i];
-        }
-
-        // Вставляем новую строку
-        matrix[insertIndex] = newRow;
-    }
-
-    // Метод для вывода матрицы на экран
-    static void PrintMatrix(int[][] matrix)
-    {
-        foreach (int[] row in matrix)
-        {
-            foreach (int element in row)
+            for (int j = 0; j < matrix[i].Length; j++)
             {
-                Console.Write(element + " ");
+                Console.Write(matrix[i][j] + " ");
             }
             Console.WriteLine();
         }
+        Console.ReadLine();
     }
 }
