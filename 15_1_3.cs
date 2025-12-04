@@ -7,52 +7,42 @@
 возрастания. */
 using System;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 class Program
 {
     static void Main()
     {
-        string[] lines = File.ReadAllLines("input.txt");
+        string text = File.ReadAllText("input.txt");
+        var matches = Regex.Matches(text, @"-?\d+");
+        List<int> allNumbers = matches.Cast<Match>().Select(m => int.Parse(m.Value)).ToList();
 
-        string[] numbersStr = lines[0].Split(' ');
-        int[] array = new int[numbersStr.Length];
-        for (int i = 0; i < numbersStr.Length; i++)
+        if (allNumbers.Count < 2)
         {
-            array[i] = int.Parse(numbersStr[i]);
+            File.WriteAllText("output.txt", "Ошибка: недостаточно чисел для определения диапазона [a, b].");
+            return;
         }
 
-        string[] rangeStr = lines[1].Split(' ');
-        int a = int.Parse(rangeStr[0]);
-        int b = int.Parse(rangeStr[1]);
+        int a = allNumbers[^2];
+        int b = allNumbers[^1];
+        var sequence = allNumbers.Take(allNumbers.Count - 2);
 
-        List<int> result = new List<int>();
+        var result = (from n in sequence
+                      where n >= a && n <= b
+                      orderby n
+                      select n).ToList();
 
-        foreach (int num in array)
-        {
-            if (num >= a && num <= b)
-            {
-                result.Add(num); 
-            }
-        }
-
-        result.Sort();
-
-        using (StreamWriter writer = new StreamWriter("output.txt"))
+        using (var writer = new StreamWriter("output.txt"))
         {
             if (result.Count == 0)
-            {
                 writer.WriteLine("Нет чисел в заданном диапазоне.");
-                Console.WriteLine("Нет чисел в заданном диапазоне.");
-            }
             else
-            {
-                foreach (int num in result)
-                {
-                    writer.WriteLine(num);
-                    Console.WriteLine(num);
-                }
-            }
+                result.ForEach(writer.WriteLine);
+        }
+    }
+}
         }
     }
 }
