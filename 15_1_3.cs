@@ -35,7 +35,7 @@ class Program
             a = b;
             b = x;
         }
-        var sequence = new int[allNumbersCount -2];
+        var sequence = new int[allNumbersCount - 2];
         for (int i = 0; i < sequence.Length; i++)
             sequence[i] = AllNumbers[i]
         var result = (for n in sequence
