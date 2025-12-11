@@ -8,41 +8,41 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
 
 class Program
 {
     static void Main()
     {
-        string text = File.ReadAllText("input.txt");
-        var matches = Regex.Matches(text, @"-?\d+");
-        List<int> allNumbers = matches.Cast<Match>().Select(m => int.Parse(m.Value)).ToList();
+        char[] delimiters = { ' ', '\t', '\n', '\r', ',', ';', ':', '.', '!', '?', '(', ')', '[', ']', '{', '}' };
+        var numbers = File.ReadAllText("E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/15_1_3/ConsoleApp1/input.txt")
+                           .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
+                           .Where(s => int.TryParse(s, out _))
+                           .Select(s => int.Parse(s))
+                           .ToList();
 
-        if (allNumbers.Count < 2)
+        if (numbers.Count < 2)
         {
-            File.WriteAllText("output.txt", "Ошибка: недостаточно чисел для определения диапазона [a, b].");
+            File.WriteAllText("E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/15_1_3/ConsoleApp1/output.txt", "Ошибка: недостаточно чисел для определения диапазона [a, b].");
             return;
         }
 
-        int a = allNumbers[^2];
-        int b = allNumbers[^1];
-        var sequence = allNumbers.Take(allNumbers.Count - 2);
-
-        var result = (from n in sequence
-                      where n >= a && n <= b
-                      orderby n
-                      select n).ToList();
-
-        using (var writer = new StreamWriter("output.txt"))
+        int a = numbers[numbers.Count - 2];
+        int b = numbers[numbers.Count - 1];
+        if (a > b)
         {
-            if (result.Count == 0)
-                writer.WriteLine("Нет чисел в заданном диапазоне.");
-            else
-                result.ForEach(writer.WriteLine);
+            int tmp = a;
+            a = b;
+            b = tmp;
         }
-    }
-}
-        }
+
+        var result = numbers.Take(numbers.Count - 2)
+                            .Where(n => n >= a && n <= b)
+                            .OrderBy(n => n)
+                            .ToList();
+
+        if (result.Count == 0)
+            File.WriteAllText("E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/15_1_3/ConsoleApp1/output.txt", "Нет чисел в заданном диапазоне.");
+        else
+            File.WriteAllLines("E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/15_1_3/ConsoleApp1/output.txt", result.Select(n => n.ToString()));
     }
 }
