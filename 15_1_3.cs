@@ -30,9 +30,9 @@ class Program
         int b = numbers[numbers.Count - 1];
         if (a > b)
         {
-            int tmp = a;
+            int x = a;
             a = b;
-            b = tmp;
+            b = x;
         }
 
         var result = numbers.Take(numbers.Count - 2)
