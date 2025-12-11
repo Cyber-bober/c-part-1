@@ -36,7 +36,7 @@ class Program
             b = x;
         }
         var sequence = new int[allNumbersCount -2];
-        for (int i = 0; i < sequence.Lenth; i++)
+        for (int i = 0; i < sequence.Length; i++)
             sequence[i] = AllNumbers[i]
         var result = (for n in sequence
                       where n >= a && n <= b
