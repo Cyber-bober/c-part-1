@@ -36,7 +36,6 @@ using System.Linq;
 class Rectangle
 {
     private int a, b;
-
     public Rectangle()
     {
         this.a = 1;
@@ -138,26 +137,24 @@ class Rectangle
             return false;
         }
         Rectangle other = (Rectangle)obj;
-        return a == other.a && b == other.b;
+        return (a == other.a && b == other.b) || (a == other.b && b == other.a);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(a, b);
+        int MinSide = Math.Min(a, b);
+        int MaxSide = Math.Max(a, b);
+        return (MinSide * 397) ^ MaxSide;
     }
 
     public static Rectangle operator ++(Rectangle r)
     {
-        r.a++;
-        r.b++;
-        return r;
+        return new Rectangle(r.a + 1, r.b + 1);
     }
 
     public static Rectangle operator --(Rectangle r)
     {
-        r.a = Math.Max(1, r.a - 1);
-        r.b = Math.Max(1, r.b - 1);
-        return r;
+        return new Rectangle(Math.Max(1, r.a - 1), Math.Max(1, r.b - 1));
     }
 
     public static bool operator true(Rectangle r)
@@ -183,14 +180,19 @@ class Rectangle
         }
         return new Rectangle(r.a * scalar, r.b * scalar);
     }
+
+    public static Rectangle operator *(int scalar, Rectangle r)
+    {
+        return r*scalar;
+    }
 }
 
 class Program
 {
     static void Main(string[] args)
     {
-        string inputFileName = "E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/17_3/ConsoleApp1/input.txt";
-        string outputFileName = "E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/17_3/ConsoleApp1/output.txt";
+        string inputFileName = "C:/Users/bykovvd/Desktop/c#/17/input.txt";
+        string outputFileName = "C:/Users/bykovvd/Desktop/c#/17/output.txt";
 
         List<Rectangle> rectangles = new List<Rectangle>();
 
@@ -260,7 +262,7 @@ class Program
         demoRect++;
         Console.WriteLine($"После инкремента (++): {demoRect}");
 
-        Rectangle scaledRect = demoRect * 2;
+        Rectangle scaledRect = 2 * demoRect;
         Console.WriteLine($"Результат demoRect * 2: {scaledRect}");
 
         Console.WriteLine("\n--- LINQ-запросы на основе данных из файла ---");
@@ -329,5 +331,6 @@ class Program
             }
         }
         Console.WriteLine($"Результаты LINQ-запросов успешно записаны в {outputFileName}");
+        Console.ReadLine();
     }
 }
