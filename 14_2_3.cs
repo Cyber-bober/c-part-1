@@ -20,6 +20,7 @@ IComparable<in T>.
 
 using System;
 using System.IO;
+using System.Globalization;
 
 namespace BaggageStorage
 {
@@ -29,15 +30,16 @@ namespace BaggageStorage
         public int ItemCount;
         public double TotalWeight;
 
-        public Passenger(string name, int count, double weight) 
+        public Passenger(string name, int count, double weight)
         {
             FullName = name;
             ItemCount = count;
             TotalWeight = weight;
         }
+
         public double AvgWeight()
         {
-            return TotalWeight / ItemCount;
+            return ItemCount != 0 ? TotalWeight / ItemCount : 0.0;
         }
 
         public int CompareTo(Passenger other)
@@ -53,56 +55,52 @@ namespace BaggageStorage
 
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            using (StreamReader reader = new StreamReader("E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/14_2_3/ConsoleApp1/input.txt"))
+            string inputFile = "E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/14_2_3/ConsoleApp1/input.txt";
+            string outputFile = "E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/14_2_3/ConsoleApp1/output.txt";
+
+            string[] lines = File.ReadAllLines(inputFile);
+            double threshold = double.Parse(lines[0].Trim(), System.Globalization.CultureInfo.InvariantCulture);
+
+            Passenger[] passengers = new Passenger[lines.Length - 1];
+
+            for (int i = 1; i < lines.Length; i++)
             {
-                double threshold = double.Parse(reader.ReadLine().Replace('.', ','));
+                string[] parts = lines[i].Split(';');
+                string name = parts[0].Trim();
+                int count = int.Parse(parts[1]);
+                double weight = double.Parse(parts[2].Trim(), System.Globalization.CultureInfo.InvariantCulture);
+                passengers[i - 1] = new Passenger(name, count, weight);
+            }
 
-                string line;
-                Passenger[] passengers = new Passenger[100]; 
-                int total = 0;
-
-                while ((line = reader.ReadLine()) != null)
+            int filteredCount = 0;
+            foreach (var p in passengers)
+            {
+                if (p.AvgWeight() > threshold)
                 {
-                    if (string.IsNullOrWhiteSpace(line)) continue;
-
-                    string[] parts = line.Split(';');
-                    if (parts.Length != 3) continue;
-
-                    string name = parts[0].Trim();
-                    int count = int.Parse(parts[1]);
-                    double weight = double.Parse(parts[2].Replace('.', ','));
-
-                    passengers[total] = new Passenger(name, count, weight);
-                    total++;
+                    filteredCount++;
                 }
+            }
 
-                Passenger[] selected = new Passenger[total];
-                int selectedCount = 0;
-
-                for (int i = 0; i < total; i++)
+            Passenger[] filteredPassengers = new Passenger[filteredCount];
+            int filteredIndex = 0;
+            foreach (var p in passengers)
+            {
+                if (p.AvgWeight() > threshold)
                 {
-                    if (passengers[i].AvgWeight() > threshold)
-                    {
-                        selected[selectedCount] = passengers[i];
-                        selectedCount++;
-                    }
+                    filteredPassengers[filteredIndex] = p;
+                    filteredIndex++;
                 }
-                Passenger[] result = new Passenger[selectedCount];
-                for (int i = 0; i < selectedCount; i++)
-                {
-                    result[i] = selected[i];
-                }
+            }
 
-                Array.Sort(result);
+            Array.Sort(filteredPassengers);
 
-                using (StreamWriter writer = new StreamWriter("E:/study/ВУЗ/3 семестр/структура данных и алгоритмы/code3smtr/14_2_3/ConsoleApp1/output.txt"))
+            using (StreamWriter writer = new StreamWriter(outputFile))
+            {
+                foreach (var p in filteredPassengers)
                 {
-                    foreach (Passenger p in result)
-                    {
-                        writer.WriteLine(p.ToString());
-                    }
+                    writer.WriteLine(p.ToString());
                 }
             }
         }
